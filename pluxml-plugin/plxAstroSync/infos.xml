@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <title><![CDATA[Astro Sync]]></title>
+  <author><![CDATA[Astro-Nano Integrations]]></author>
+  <version>0.1.0</version>
+  <date>2025-10-31</date>
+  <site>https://alaoui.be/</site>
+  <description><![CDATA[Déclenche un rebuild (Cloudflare Pages) après sauvegarde d’article/page. Ajoute une page de configuration et un bouton de test.]]></description>
+  <requirements></requirements>
+</document>
+

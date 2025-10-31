@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Builds and caches
+dist/
+.astro/
+.vercel/
+.netlify/
+
+# Local env
+.env
+.env.local
+
+# OS/editor
+.DS_Store
+*.log
+
+# Lockfiles (keep one if you prefer)
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+
+# Generated content (sync + site config)
+src/assets/pluxml/
+src/content/blog/pluxml/
+src/content/pages/pluxml/
+src/site.config.ts
+

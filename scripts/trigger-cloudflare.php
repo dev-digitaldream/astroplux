@@ -75,14 +75,31 @@ $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($errno) {
+  log_line(['ok'=>false,'error'=>'curl','errno'=>$errno]);
   error_exit(502, 'cURL error: ' . $errno);
 }
 
 if ($status < 200 || $status >= 300) {
+  log_line(['ok'=>false,'status'=>$status,'response'=>$response]);
   error_exit($status ?: 502, 'Webhook failed with status ' . $status);
 }
 
 http_response_code(200);
 echo json_encode(['ok' => true, 'status' => $status, 'response' => $response], JSON_UNESCAPED_UNICODE);
+log_line(['ok'=>true,'status'=>$status]);
 exit;
+?>
+
+<?php
+// Append JSON log line if LOG_FILE env or ?log=/path is provided
+function log_line($data) {
+  $file = getenv('LOG_FILE') ?: ($_GET['log'] ?? '');
+  if (!$file) return;
+  $row = [
+    'ts' => date('c'),
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
+    'data' => $data,
+  ];
+  @file_put_contents($file, json_encode($row, JSON_UNESCAPED_UNICODE)."\n", FILE_APPEND);
+}
 ?>

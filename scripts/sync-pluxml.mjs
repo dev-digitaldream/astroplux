@@ -27,6 +27,19 @@ const c = {
   gray: (s) => `\x1b[90m${s}\x1b[0m`,
 };
 
+// Image allowlist via env: IMAGE_ALLOWLIST="domain1.com,domain2.com" (empty = allow all)
+function isAllowedImageSrc(src) {
+  const list = (process.env.IMAGE_ALLOWLIST || "").split(/[\,\s]+/).filter(Boolean);
+  if (list.length === 0) return true;
+  try {
+    const u = new URL(src, "http://dummy");
+    const host = u.hostname.toLowerCase();
+    return list.some((d) => host === d.toLowerCase() || host.endsWith(`.${d.toLowerCase()}`));
+  } catch {
+    return false;
+  }
+}
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -114,9 +127,15 @@ function mapPage(item) {
   const slug = item.slug || item.url || toSlug(title);
   const description = item.description || item.excerpt || title;
   const html = item.content || item.html || item.body || "";
+  const metaTitle = item.meta_title || item.seo_title || title;
+  const metaDescription = item.meta_description || description;
+  const cover = item.cover || item.image || item.cover_image || "";
   const fm = [
     `title: ${y(title)}`,
     `description: ${y(description)}`,
+    `metaTitle: ${y(metaTitle)}`,
+    `metaDescription: ${y(metaDescription)}`,
+    `cover: ${y(cover)}`,
   ];
   return { slug, fm, html };
 }
@@ -234,6 +253,10 @@ async function transformHtmlImagesToMdx(slug, html) {
 
     // Only handle http(s) or absolute path images; skip data URIs
     if (!/^https?:\/\//i.test(src) && !src.startsWith("/")) continue;
+    if (!isAllowedImageSrc(src)) {
+      console.log(c.gray(`skip image (not allowed): ${src}`));
+      continue;
+    }
 
     let varName = seen.get(src);
     if (!varName) {

@@ -12,9 +12,9 @@ class plxAstroSync extends plxPlugin {
         // Paramètres gérés via config.php avec setParam/saveParams
         // (pas de addConfigParameter dans PluXML 5.8.x)
 
-        // Hooks post-save (à décommenter après vérification exacte des noms sur 5.8.21)
-        // $this->addHook('AdminArticlePostSave', 'hookPostSaveArticle');
-        // $this->addHook('AdminStaticPostSave', 'hookPostSaveStatic');
+        // Hooks post-save (PluXML 5.8.x)
+        $this->addHook('AdminArticlePostSave', 'hookPostSaveArticle');
+        $this->addHook('AdminStaticPostSave', 'hookPostSaveStatic');
     }
 
     public function onInstall() {

@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+
+const pages = (await getCollection("pages")).sort((a, b) => a.slug.localeCompare(b.slug));
+---
+
+<PageLayout title="Pages" description="Site pages">
+  <Container>
+    <div class="space-y-6">
+      <div class="animate font-semibold text-black dark:text-white">Pages</div>
+      <ul class="flex flex-col gap-3">
+        {pages.map((p) => (
+          <li class="animate">
+            <a href={`/pages/${p.slug}`} class="block py-3 px-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+              <div class="font-semibold">{p.data.title}</div>
+              <div class="text-sm opacity-80">{p.data.description}</div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Container>
+</PageLayout>
+

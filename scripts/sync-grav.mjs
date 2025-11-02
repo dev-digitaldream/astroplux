@@ -11,6 +11,7 @@ const EXPORT_URL = process.env.GRAV_EXPORT_URL || process.env.PLUXML_EXPORT_URL 
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog', 'grav');
 const PAGES_DIR = path.join(ROOT, 'src', 'content', 'pages', 'grav');
+const SITE_CONFIG_TS = path.join(ROOT, 'src', 'site.config.ts');
 
 const c = {
   green: (s) => `\x1b[32m${s}\x1b[0m`,
@@ -38,6 +39,7 @@ async function main(){
     const data = await r.json();
     const posts = data.posts || data.articles || [];
     const pages = data.pages || [];
+    const cfg   = data.config || {};
 
     let pc=0; for(const p of posts){
       const title = p.title || p.header?.title || 'Sans titre';
@@ -79,7 +81,31 @@ async function main(){
       gc++;
     }
 
-    console.log(c.green(`✓ Synced ${pc} posts, ${gc} pages from Grav`));
+    // Generate site config at build time so front can import it
+    try {
+      const socials = Array.isArray(cfg.socials) ? cfg.socials : [];
+      const siteTs = `// Auto-generated from Grav export. Do not commit.
+export const SITE_CONFIG = {
+  NAME: ${y(cfg.site_title || 'Site')},
+  EMAIL: ${y(cfg.email || '')},
+  HOME_TITLE: ${y(cfg.home_title || cfg.site_title || 'Accueil')},
+  HOME_DESCRIPTION: ${y(cfg.home_description || cfg.site_description || '')},
+  BLOG_TITLE: ${y(cfg.blog_title || 'Blog')},
+  BLOG_DESCRIPTION: ${y(cfg.blog_description || '')},
+  WORK_TITLE: ${y(cfg.work_title || 'Work')},
+  WORK_DESCRIPTION: ${y(cfg.work_description || '')},
+  PROJECTS_TITLE: ${y(cfg.projects_title || 'Projects')},
+  PROJECTS_DESCRIPTION: ${y(cfg.projects_description || '')},
+  SOCIALS: ${JSON.stringify(socials, null, 2)}
+};
+`;
+      fs.writeFileSync(SITE_CONFIG_TS, siteTs, {encoding:'utf8'});
+      console.log(c.gray(`generated ${path.relative(ROOT, SITE_CONFIG_TS)}`));
+    } catch (e) {
+      console.log(c.yellow(`! failed to write site.config.ts: ${e?.message||e}`));
+    }
+
+    console.log(c.green(`✓ Synced ${pc} posts, ${gc} pages from Grav and generated site.config.ts`));
   }catch(e){
     console.log(c.yellow(`! Grav sync skipped: ${e?.message||e}`));
   }

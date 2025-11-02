@@ -30,16 +30,9 @@ export const PROJECTS: Metadata = {
 };
 
 export const SOCIALS: Socials = [
-  { 
-    NAME: "twitter-x",
-    HREF: "https://twitter.com/markhorn_dev",
-  },
-  { 
-    NAME: "github",
-    HREF: "https://github.com/markhorn-dev"
-  },
-  { 
-    NAME: "linkedin",
-    HREF: "https://www.linkedin.com/in/markhorn-dev",
-  }
+  ...(Array.isArray((SITE_CONFIG as any).SOCIALS) ? (SITE_CONFIG as any).SOCIALS : [
+    { NAME: "twitter-x", HREF: "https://twitter.com/markhorn_dev" },
+    { NAME: "github", HREF: "https://github.com/markhorn-dev" },
+    { NAME: "linkedin", HREF: "https://www.linkedin.com/in/markhorn-dev" },
+  ])
 ];

@@ -1,0 +1,33 @@
+---
+interface Props {
+  url: string; // absolute URL
+  title: string;
+  text?: string;
+}
+
+const { url, title, text = "" } = Astro.props;
+
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+const d = encodeURIComponent(text);
+
+const links = [
+  { name: "X", href: `https://twitter.com/intent/tweet?url=${u}&text=${t}` },
+  { name: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+  { name: "LinkedIn", href: `https://www.linkedin.com/shareArticle?mini=true&url=${u}&title=${t}&summary=${d}` },
+  { name: "WhatsApp", href: `https://api.whatsapp.com/send?text=${t}%20${u}` },
+  { name: "Reddit", href: `https://www.reddit.com/submit?url=${u}&title=${t}` },
+  { name: "Email", href: `mailto:?subject=${t}&body=${d}%0A%0A${u}` },
+];
+---
+
+<nav aria-label="Share" class="flex flex-wrap gap-2 text-sm">
+  {links.map((l) => (
+    <a href={l.href} target="_blank" rel="noopener noreferrer" class="underline opacity-80 hover:opacity-100">
+      {l.name}
+    </a>
+  ))}
+  <span class="sr-only">Share this page</span>
+  
+</nav>
+

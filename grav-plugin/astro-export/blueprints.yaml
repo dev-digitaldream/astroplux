@@ -1,0 +1,46 @@
+name: Astro Export
+slug: astro-export
+type: plugin
+version: 0.1.0
+description: Exports site content (posts/pages) as JSON for Astro sync.
+icon: share-alt
+author:
+  name: Astro Integration
+  email: dev@example.com
+homepage: https://github.com/dev-digitaldream/astroplux
+keywords: astro, export, json, headless
+bugs: https://github.com/dev-digitaldream/astroplux/issues
+license: MIT
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    route:
+      type: text
+      label: Export route
+      default: /astro-export.json
+    blog_root:
+      type: text
+      label: Blog root route
+      default: /blog
+    include_html:
+      type: toggle
+      label: Include HTML content
+      highlight: 1
+      default: 1
+      options:
+        1: Yes
+        0: No
+      validate:
+        type: bool
+

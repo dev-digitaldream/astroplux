@@ -5,6 +5,7 @@ import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
+import ShareButtons from "@components/ShareButtons.astro";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -42,6 +43,17 @@ const { Content } = await post.render();
         {post.data.title}
       </div>
     </div>
+    {
+      // Absolute URL for sharing
+    }
+    {(() => {
+      const absoluteUrl = new URL(Astro.url.pathname, Astro.site).toString();
+      return (
+        <div class="animate my-6">
+          <ShareButtons url={absoluteUrl} title={post.data.title} text={post.data.description ?? ''} />
+        </div>
+      );
+    })()}
     <article class="animate">
       <Content />
     </article>

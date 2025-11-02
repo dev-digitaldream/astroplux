@@ -5,13 +5,13 @@
   "scripts": {
     "dev": "astro dev",
     "dev:network": "astro dev --host",
-    "prebuild": "node scripts/sync-pluxml.mjs",
+    "prebuild": "node scripts/sync.mjs",
     "build": "astro check && astro build",
     "sync:watch": "node scripts/sync-pluxml.mjs --watch --interval=15000",
     "preview": "astro preview",
     "preview:network": "astro preview --host",
     "astro": "astro",
-    "sync": "node scripts/sync-pluxml.mjs",
+    "sync": "node scripts/sync.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

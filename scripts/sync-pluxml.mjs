@@ -1,13 +1,11 @@
 #!/usr/bin/env node
-// Sync PluXML JSON export to Astro content collections
-// - Articles -> src/content/blog/pluxml/*.md
-// - Pages    -> src/content/pages/pluxml/*.md (if provided)
-// Node 18+: relies on global fetch.
+// Sync PluXML export XML → Astro content collections
+// Env: PLUXML_EXPORT_URL (e.g., https://your.site/telechargements/plx-astro-sync.xml)
 
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import slugify from "slugify";
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import slugify from 'slugify';
 import { fileURLToPath } from "node:url";
 import { setTimeout as sleep } from "node:timers/promises";
 
@@ -261,9 +259,7 @@ async function transformHtmlImagesToMdx(slug, html) {
 
   while ((match = imgRegex.exec(html)) !== null) {
     const full = match[0];
-    const pre = match[1] || "";
     const src = match[2];
-    const post = match[3] || "";
 
     // Only handle http(s) or absolute path images; skip data URIs
     if (!/^https?:\/\//i.test(src) && !src.startsWith("/")) continue;

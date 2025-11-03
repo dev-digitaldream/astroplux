@@ -1,0 +1,61 @@
+<div class="admin-sync-astro" style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 4px; border-left: 4px solid #3498db;">
+  <h4 style="margin-top: 0;">Synchroniser avec Astro</h4>
+  <p style="margin: 10px 0; font-size: 14px; color: #666;">
+    Déclenchez un rebuild de votre site Astro sur Cloudflare Pages.
+  </p>
+  <button 
+    id="sync-astro-btn" 
+    class="btn btn-primary" 
+    onclick="syncAstro()"
+    style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+    🔄 Sync Astro Now
+  </button>
+  <div id="sync-result" style="margin-top: 15px; display: none; padding: 10px; border-radius: 4px; font-size: 14px;"></div>
+</div>
+
+<script>
+function syncAstro() {
+  const btn = document.getElementById('sync-astro-btn');
+  const resultDiv = document.getElementById('sync-result');
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  resultDiv.style.display = 'none';
+  
+  fetch('https://alaoui.be/grav/trigger-deploy.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => res.json())
+  .then(data => {
+    resultDiv.style.display = 'block';
+    if (data.ok && data.response?.success) {
+      resultDiv.style.background = '#d4edda';
+      resultDiv.style.color = '#155724';
+      resultDiv.style.border = '1px solid #c3e6cb';
+      resultDiv.innerHTML = '✅ <strong>Sync successful!</strong> Cloudflare build started. Check your deployments in ~1-2 minutes.';
+      btn.textContent = '✅ Synced!';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '🔄 Sync Astro Now';
+      }, 3000);
+    } else {
+      resultDiv.style.background = '#f8d7da';
+      resultDiv.style.color = '#721c24';
+      resultDiv.style.border = '1px solid #f5c6cb';
+      resultDiv.innerHTML = '❌ <strong>Sync failed:</strong> ' + (data.response?.errors?.[0] || data.error || 'Unknown error');
+      btn.disabled = false;
+      btn.textContent = '🔄 Sync Astro Now';
+    }
+  })
+  .catch(err => {
+    resultDiv.style.display = 'block';
+    resultDiv.style.background = '#f8d7da';
+    resultDiv.style.color = '#721c24';
+    resultDiv.style.border = '1px solid #f5c6cb';
+    resultDiv.innerHTML = '❌ <strong>Error:</strong> ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '🔄 Sync Astro Now';
+  });
+}
+</script>

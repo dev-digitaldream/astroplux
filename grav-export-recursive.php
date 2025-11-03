@@ -13,6 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $ROOT   = __DIR__;
 $PAGES  = $ROOT . '/user/pages';
+$DATA   = $ROOT . '/user/data';
+
+if (!function_exists('str_starts_with')) {
+  function str_starts_with($haystack, $needle) {
+    return $needle === '' || strpos($haystack, $needle) === 0;
+  }
+}
 
 function strip_num_prefix($name) {
   // Remove leading NN. from folder names like 01.home => home
@@ -111,6 +118,7 @@ function collect_content($pagesRoot) {
       'tags'   => $fm['header']['tags'] ?? [],
       'header' => $fm['header'],
       'html'   => $fm['body'],
+      'raw'    => $raw,
     ];
 
     if ($isBlog) $posts[] = $item; else $pages[] = $item;
@@ -154,6 +162,59 @@ if (is_file($siteYaml)) {
   }
 }
 
+function get_root_segment($route) {
+  $segments = array_values(array_filter(explode('/', trim($route, '/'))));
+  return $segments[0] ?? '';
+}
+
+function normalise_project($item) {
+  $header = $item['header'] ?? [];
+  return [
+    'title' => $item['title'],
+    'slug' => $item['slug'],
+    'route' => $item['route'],
+    'date' => $header['date'] ?? $item['date'],
+    'description' => $header['description'] ?? ($header['summary'] ?? ''),
+    'excerpt' => $header['excerpt'] ?? '',
+    'tags' => $header['tags'] ?? $item['tags'] ?? [],
+    'demo_url' => $header['demo_url'] ?? ($header['demo'] ?? ''),
+    'repo_url' => $header['repo_url'] ?? ($header['repository'] ?? ''),
+    'draft' => isset($header['published']) ? !$header['published'] : ($header['draft'] ?? false),
+    'header' => $header,
+    'html' => $item['html'],
+  ];
+}
+
+function normalise_work($item) {
+  $header = $item['header'] ?? [];
+  $dateStart = $header['date_start'] ?? ($header['from'] ?? null);
+  $dateEnd = $header['date_end'] ?? ($header['to'] ?? null);
+  return [
+    'title' => $item['title'],
+    'slug' => $item['slug'],
+    'route' => $item['route'],
+    'company' => $header['company'] ?? $item['title'],
+    'role' => $header['role'] ?? ($header['position'] ?? ''),
+    'location' => $header['location'] ?? '',
+    'date_start' => $dateStart,
+    'date_end' => $dateEnd,
+    'header' => $header,
+    'html' => $item['html'],
+  ];
+}
+
+function load_plugin_config($dataRoot)
+{
+  $file = rtrim($dataRoot, DIRECTORY_SEPARATOR) . '/astro-nano/config.json';
+  if (is_file($file)) {
+    $payload = json_decode(file_get_contents($file), true);
+    if (is_array($payload)) {
+      return $payload;
+    }
+  }
+  return [];
+}
+
 $debug = [
   'pages_root' => $PAGES,
   'exists' => is_dir($PAGES),
@@ -168,15 +229,62 @@ if (is_dir($PAGES)) {
   $debug['pages_count'] = count($pages);
 }
 
+$projects = [];
+$work = [];
+$staticPages = [];
+$home = null;
+
+foreach ($pages as $page) {
+  $root = get_root_segment($page['route']);
+
+  if ($root === '' || $root === 'home') {
+    if ($home === null) {
+      $home = $page;
+    }
+    continue;
+  }
+
+  if (str_starts_with($root, 'project')) {
+    $projects[] = normalise_project($page);
+    continue;
+  }
+
+  if (str_starts_with($root, 'work')) {
+    $work[] = normalise_work($page);
+    continue;
+  }
+
+  $staticPages[] = $page;
+}
+
+$pluginConfig = load_plugin_config($DATA);
+
+$configPayload = [
+  'site_title' => $pluginConfig['site_title'] ?? ($site['title'] ?? ''),
+  'site_description' => $pluginConfig['site_description'] ?? ($site['description'] ?? ''),
+  'email' => $pluginConfig['email'] ?? ($site['author']['email'] ?? ''),
+  'home_title' => $pluginConfig['defaults']['home_title'] ?? 'Home',
+  'home_description' => $pluginConfig['defaults']['home_description'] ?? '',
+  'blog_title' => $pluginConfig['defaults']['blog_title'] ?? 'Blog',
+  'blog_description' => $pluginConfig['defaults']['blog_description'] ?? '',
+  'work_title' => $pluginConfig['defaults']['work_title'] ?? 'Work',
+  'work_description' => $pluginConfig['defaults']['work_description'] ?? '',
+  'projects_title' => $pluginConfig['defaults']['projects_title'] ?? 'Projects',
+  'projects_description' => $pluginConfig['defaults']['projects_description'] ?? '',
+  'socials' => $pluginConfig['socials'] ?? ($site['socials'] ?? []),
+];
+
+$debug['projects_count'] = count($projects);
+$debug['work_count'] = count($work);
+$debug['home'] = $home ? $home['route'] : null;
+
 $payload = [
-  'config' => [
-    'site_title' => $site['title'] ?? '',
-    'site_description' => $site['description'] ?? '',
-    'email' => $site['author']['email'] ?? '',
-    'socials' => $site['socials'] ?? []
-  ],
+  'config' => $configPayload,
+  'home' => $home,
   'posts' => $posts,
-  'pages' => $pages,
+  'projects' => $projects,
+  'work' => $work,
+  'pages' => $staticPages,
   'status' => 'success',
   'timestamp' => date('c'),
   'debug' => $debug,

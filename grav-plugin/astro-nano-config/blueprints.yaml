@@ -1,0 +1,111 @@
+name: Astro Nano Config
+version: 0.1.0
+type: plugin
+description: Administre Astro Nano (titres, descriptions, réseaux) depuis Grav.
+icon: sliders
+author:
+  name: Astro Integration
+  email: dev@example.com
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin activé
+      highlight: 1
+      default: 1
+      options:
+        1: Activé
+        0: Désactivé
+      validate:
+        type: bool
+
+    site_section:
+      type: section
+      title: Paramètres du site
+      underline: true
+
+    site_title:
+      type: text
+      label: Titre du site
+      default: Astro Nano
+
+    site_description:
+      type: textarea
+      label: Description du site
+      rows: 3
+
+    email:
+      type: email
+      label: Email de contact
+      placeholder: contact@example.com
+
+    defaults_section:
+      type: section
+      title: Titres & descriptions de sections
+      underline: true
+
+    defaults.home_title:
+      type: text
+      label: Titre (Accueil)
+    defaults.home_description:
+      type: textarea
+      label: Description (Accueil)
+      rows: 2
+
+    defaults.blog_title:
+      type: text
+      label: Titre (Blog)
+    defaults.blog_description:
+      type: textarea
+      label: Description (Blog)
+      rows: 2
+
+    defaults.work_title:
+      type: text
+      label: Titre (Work)
+    defaults.work_description:
+      type: textarea
+      label: Description (Work)
+      rows: 2
+
+    defaults.projects_title:
+      type: text
+      label: Titre (Projects)
+    defaults.projects_description:
+      type: textarea
+      label: Description (Projects)
+      rows: 2
+
+    socials_section:
+      type: section
+      title: Réseaux sociaux
+      underline: true
+
+    socials:
+      type: list
+      style: vertical
+      label: Liens sociaux
+      btn_label: Ajouter un réseau
+      fields:
+        .name:
+          type: text
+          label: Nom (github, linkedin, ...)
+        .href:
+          type: url
+          label: URL
+
+    sync_section:
+      type: section
+      title: Synchronisation Astro
+      underline: true
+
+    sync_info:
+      type: display
+      label: "Déclenchez une synchronisation"
+      markdown: true
+      content: |
+        Cliquez sur le bouton ci-dessous pour lancer un rebuild de votre site Astro sur Cloudflare Pages.
+        
+        ⏱️ **Durée**: 1-2 minutes  
+        📊 **Vérifiez**: Allez dans Cloudflare Pages → Deployments pour voir la progression

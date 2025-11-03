@@ -1,0 +1,19 @@
+enabled: true
+site_title: "Astro Nano"
+site_description: "Site vitrine propulsé par Grav + Astro"
+email: "contact@example.com"
+
+defaults:
+  home_title: "Accueil"
+  home_description: "Bienvenue sur Astro Nano"
+  blog_title: "Blog"
+  blog_description: "Actualités et articles"
+  work_title: "Références"
+  work_description: "Nos réalisations"
+  projects_title: "Projets"
+  projects_description: "Projets et études de cas"
+
+socials:
+  - { name: "github", href: "https://github.com/dev-digitaldream" }
+  - { name: "linkedin", href: "https://linkedin.com/in/dev-digitaldream" }
+  - { name: "twitter-x", href: "https://twitter.com/dev_digitaldream" }

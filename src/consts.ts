@@ -32,7 +32,7 @@ export const PROJECTS: Metadata = {
 export const SOCIALS: Socials = [
   ...(Array.isArray(SITE_CONFIG.SOCIALS) ? SITE_CONFIG.SOCIALS : [
     { NAME: "github", HREF: "https://github.com/dev-digitaldream" },
-    { NAME: "twitter-x", HREF: "https://twitter.com/dev_digitaldream" },
+    { NAME: "twitter-x", HREF: "https://x.com/digitaldream_io" },
     { NAME: "linkedin", HREF: "https://linkedin.com/in/dev-digitaldream" },
   ])
 ];

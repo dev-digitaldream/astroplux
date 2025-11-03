@@ -1,0 +1,12 @@
+enabled: true
+
+# Cloudflare R2 Configuration
+account_id: ''
+access_key_id: ''
+secret_access_key: ''
+bucket_name: 'astro-nano-images'
+cdn_domain: 'images.alaoui.be'
+
+# Options
+auto_convert_webp: true
+image_quality: 80

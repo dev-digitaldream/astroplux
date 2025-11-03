@@ -1,0 +1,116 @@
+name: R2 Image Sync
+slug: r2-image-sync
+type: plugin
+version: 1.0.0
+description: Synchronise automatiquement les images Grav vers Cloudflare R2 et remplace les URLs locales par des URLs CDN.
+icon: cloud-upload
+author:
+  name: Astro Integration
+  email: dev@example.com
+homepage: https://github.com/dev-digitaldream/astroplux
+keywords: r2, cloudflare, images, cdn, webp
+bugs: https://github.com/dev-digitaldream/astroplux/issues
+license: MIT
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    r2_section:
+      type: section
+      title: Cloudflare R2 Configuration
+      underline: true
+
+    account_id:
+      type: text
+      label: Account ID
+      placeholder: "160f96a41efd2629170558cb351d8972"
+      help: "Trouvez-le dans Cloudflare Dashboard → R2 → Settings"
+
+    access_key_id:
+      type: text
+      label: Access Key ID
+      placeholder: "4ffd804cf8336d7b066db12267c35a25"
+      help: "Créé dans R2 → Manage R2 API Tokens"
+
+    secret_access_key:
+      type: password
+      label: Secret Access Key
+      placeholder: "e871caa1c93929b0066561d598c42b5b4c0f87fc1ef5f915758e6ab83ef88bb3"
+      help: "⚠️ Gardez-le secret ! À copier lors de la création du token"
+
+    bucket_name:
+      type: text
+      label: Bucket Name
+      default: "astro-nano-images"
+      help: "Nom du bucket R2 pour stocker les images"
+
+    cdn_domain:
+      type: text
+      label: CDN Domain
+      default: "images.alaoui.be"
+      help: "Domaine public du bucket R2 (ex: images.alaoui.be)"
+
+    options_section:
+      type: section
+      title: Options
+      underline: true
+
+    auto_convert_webp:
+      type: toggle
+      label: Auto-convert to WebP
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    image_quality:
+      type: number
+      label: Image Quality (1-100)
+      default: 80
+      validate:
+        min: 1
+        max: 100
+        type: number
+
+    info_section:
+      type: section
+      title: Information
+      underline: true
+
+    info:
+      type: display
+      markdown: true
+      content: |
+        ## 🚀 Comment ça fonctionne
+
+        1. **Vous uploadez une image** dans Grav Admin (Pages → Media)
+        2. **Le plugin détecte** l'image dans le contenu
+        3. **Conversion WebP** automatique (si activée)
+        4. **Upload vers R2** via l'API Cloudflare
+        5. **Remplacement d'URL** : l'image locale devient une URL CDN
+
+        ### Exemple
+
+        **Avant** : `![Hero](hero.png)`  
+        **Après** : `![Hero](https://images.alaoui.be/astro-nano-images/hero.webp)`
+
+        ### Avantages
+
+        - ✅ Images **70-80% plus légères** (WebP)
+        - ✅ **CDN global** (Cloudflare)
+        - ✅ **Cache 1 an** (immutable)
+        - ✅ **Automatique** (pas de manipulation manuelle)

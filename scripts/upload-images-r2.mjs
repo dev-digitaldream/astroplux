@@ -7,6 +7,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+// Charger .env.local
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const envPath = path.join(__dirname, '..', '.env.local');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  envContent.split('\n').forEach(line => {
+    const [key, value] = line.split('=');
+    if (key && value && !process.env[key]) {
+      process.env[key] = value.trim();
+    }
+  });
+}
 
 const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const R2_ACCESS_KEY = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
@@ -18,6 +32,10 @@ const sourceDir = process.argv[2] || './assets/images';
 
 if (!R2_ACCESS_KEY || !R2_SECRET_KEY) {
   console.error('❌ Erreur: CLOUDFLARE_R2_ACCESS_KEY_ID et CLOUDFLARE_R2_SECRET_ACCESS_KEY non définis');
+  console.error(`   Vérifiez que .env.local existe et contient:`);
+  console.error(`   CLOUDFLARE_ACCOUNT_ID=...`);
+  console.error(`   CLOUDFLARE_R2_ACCESS_KEY_ID=...`);
+  console.error(`   CLOUDFLARE_R2_SECRET_ACCESS_KEY=...`);
   process.exit(1);
 }
 

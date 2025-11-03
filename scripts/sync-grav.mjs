@@ -30,7 +30,15 @@ function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return i
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
 function toDateMaybe(d){ if(!d) return ''; const t=new Date(d); return isNaN(t)?d:t.toISOString().slice(0,10); }
-function convertLocalImagesToR2(html){ if(!html) return ''; return html.replace(/!\[([^\]]*)\]\((?!https?:\/\/)([^)]+\.(jpg|jpeg|png|gif|webp))\)/gi, (match, alt, filename) => { const webpName = filename.replace(/\.[^.]+$/, '.webp'); return `![${alt}](https://images.alaoui.be/astro-nano-images/${webpName})`; }); }
+function convertLocalImagesToR2(html){
+  if(!html) return '';
+  const pattern = /!\[([^\]]*)\]\((?!https?:\/\/)([^\s)]+?\.(?:jpg|jpeg|png|gif|webp))(?:\s+"([^"]*)")?\)/gi;
+  return html.replace(pattern, (_match, alt, filename, title) => {
+    const webpName = filename.replace(/\.[^.]+$/, '.webp');
+    const titlePart = title ? ` "${title}"` : '';
+    return `![${alt}](https://images.alaoui.be/astro-nano-images/${webpName}${titlePart})`;
+  });
+}
 
 async function main(){
   console.log(c.cyan('Sync Grav → Astro starting'));

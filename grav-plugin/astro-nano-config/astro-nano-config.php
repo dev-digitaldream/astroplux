@@ -74,16 +74,4 @@ class AstroNanoConfigPlugin extends Plugin
 
         return $normalised;
     }
-
-    public function onAdminMenu(): void
-    {
-        // Ajouter un lien "Sync Astro" dans le menu admin
-        $this->grav['twig']->twig_vars['admin_menu_extra'] = [
-            'sync-astro' => [
-                'title' => 'Sync Astro',
-                'icon' => 'fa-refresh',
-                'route' => '/admin/astro-nano-config/sync',
-            ],
-        ];
-    }
 }

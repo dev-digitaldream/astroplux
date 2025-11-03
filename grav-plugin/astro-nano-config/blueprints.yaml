@@ -105,7 +105,11 @@ form:
       label: "Déclenchez une synchronisation"
       markdown: true
       content: |
-        Cliquez sur le bouton ci-dessous pour lancer un rebuild de votre site Astro sur Cloudflare Pages.
+        Cliquez sur le lien ci-dessous pour lancer un rebuild de votre site Astro sur Cloudflare Pages.
         
         ⏱️ **Durée**: 1-2 minutes  
         📊 **Vérifiez**: Allez dans Cloudflare Pages → Deployments pour voir la progression
+        
+        [🔄 **SYNC ASTRO NOW**](https://alaoui.be/grav/trigger-deploy.php){.btn.btn-primary style="display: inline-block; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;"}
+        
+        **Ou ouvrez directement** : `https://alaoui.be/grav/trigger-deploy.php`

@@ -43,20 +43,18 @@ const work = await Promise.all(
 
 ---
 
-<PageLayout title={homeContent?.data?.metaTitle || HOME.TITLE} description={homeContent?.data?.metaDescription || HOME.DESCRIPTION}>
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    {homeContent ? (
-      <div class="animate space-y-4">
-        <homeContent.Content />
-      </div>
-    ) : (
-      <>
-        <h4 class="animate font-semibold text-black dark:text-white">
-          Hi, I'm Nano <span class="text-xl">👋🏻</span> 
-        </h4>
-        <div class="space-y-16">
-          <section>
-            <article class="space-y-4">
+    <h4 class="animate font-semibold text-black dark:text-white">
+      Hi, I'm Nano <span class="text-xl">👋🏻</span> 
+    </h4>
+    <div class="space-y-16">
+      <section>
+        <article class="space-y-4">
+          {homeContent ? (
+            <homeContent.Content />
+          ) : (
+            <>
               <p class="animate">
                 I am a minimal, seo friendly, accessible portfolio and blog for developers. 
                 I am an even more lightweight version of my popular theme
@@ -79,12 +77,11 @@ const work = await Promise.all(
                 </Link>
                 to fork the repository, read the docs or one-click deploy on Vercel or Netlify. 
               </p>
-            </article>
-          </section>
-      </>
-    )}
+            </>
+          )}
+        </article>
+      </section>
 
-    <div class="space-y-16">
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">

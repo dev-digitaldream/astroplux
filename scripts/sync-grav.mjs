@@ -30,6 +30,7 @@ function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return i
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
 function toDateMaybe(d){ if(!d) return ''; const t=new Date(d); return isNaN(t)?d:t.toISOString().slice(0,10); }
+function cleanLocalImages(html){ if(!html) return ''; return html.replace(/!\[([^\]]*)\]\((?!https?:\/\/)([^)]+\.(jpg|jpeg|png|gif|webp))\)/gi, ''); }
 
 async function main(){
   console.log(c.cyan('Sync Grav → Astro starting'));
@@ -67,7 +68,7 @@ async function main(){
         `cover: ${y(cover)}`,
       ];
       const file = path.join(BLOG_DIR, `${slug}.md`);
-      write(file, fm, p.html || p.content || '');
+      write(file, fm, cleanLocalImages(p.html || p.content || ''));
       pc++;
     }
 
@@ -107,7 +108,7 @@ async function main(){
         `tags: ${JSON.stringify(tags)}`,
       ];
       const file = path.join(PROJECTS_DIR, `${slug}.md`);
-      write(file, fm, project.html || project.content || '');
+      write(file, fm, cleanLocalImages(project.html || project.content || ''));
       prc++;
     }
 
@@ -125,7 +126,7 @@ async function main(){
         `dateEnd: ${y(toDateMaybe(dateEnd))}`,
       ];
       const file = path.join(WORK_DIR, `${slug}.md`);
-      write(file, fm, item.html || item.content || '');
+      write(file, fm, cleanLocalImages(item.html || item.content || ''));
       wc++;
     }
 
@@ -140,7 +141,7 @@ async function main(){
         `metaDescription: ${y(page.header?.meta_description || description)}`,
       ];
       const file = path.join(PAGES_DIR, `${slug}.md`);
-      write(file, fm, page.html || page.content || '');
+      write(file, fm, cleanLocalImages(page.html || page.content || ''));
     }
 
     if (home) {
@@ -152,7 +153,7 @@ async function main(){
         `metaTitle: ${y(home.header?.meta_title || title)}`,
         `metaDescription: ${y(home.header?.meta_description || description)}`,
       ];
-      write(HOME_FILE, fm, home.html || home.content || '');
+      write(HOME_FILE, fm, cleanLocalImages(home.html || home.content || ''));
     }
 
     // Generate site config at build time so front can import it

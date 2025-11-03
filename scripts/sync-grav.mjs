@@ -108,7 +108,7 @@ async function main(){
         `tags: ${JSON.stringify(tags)}`,
       ];
       const file = path.join(PROJECTS_DIR, `${slug}.md`);
-      write(file, fm, cleanLocalImages(project.html || project.content || ''));
+      write(file, fm, convertLocalImagesToR2(project.html || project.content || ''));
       prc++;
     }
 
@@ -126,7 +126,7 @@ async function main(){
         `dateEnd: ${y(toDateMaybe(dateEnd))}`,
       ];
       const file = path.join(WORK_DIR, `${slug}.md`);
-      write(file, fm, cleanLocalImages(item.html || item.content || ''));
+      write(file, fm, convertLocalImagesToR2(item.html || item.content || ''));
       wc++;
     }
 
@@ -141,7 +141,7 @@ async function main(){
         `metaDescription: ${y(page.header?.meta_description || description)}`,
       ];
       const file = path.join(PAGES_DIR, `${slug}.md`);
-      write(file, fm, cleanLocalImages(page.html || page.content || ''));
+      write(file, fm, convertLocalImagesToR2(page.html || page.content || ''));
     }
 
     if (home) {
@@ -153,7 +153,7 @@ async function main(){
         `metaTitle: ${y(home.header?.meta_title || title)}`,
         `metaDescription: ${y(home.header?.meta_description || description)}`,
       ];
-      write(HOME_FILE, fm, cleanLocalImages(home.html || home.content || ''));
+      write(HOME_FILE, fm, convertLocalImagesToR2(home.html || home.content || ''));
     }
 
     // Generate site config at build time so front can import it

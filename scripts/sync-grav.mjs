@@ -30,7 +30,7 @@ function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return i
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
 function toDateMaybe(d){ if(!d) return ''; const t=new Date(d); return isNaN(t)?d:t.toISOString().slice(0,10); }
-function cleanLocalImages(html){ if(!html) return ''; return html.replace(/!\[([^\]]*)\]\((?!https?:\/\/)([^)]+\.(jpg|jpeg|png|gif|webp))\)/gi, ''); }
+function convertLocalImagesToR2(html){ if(!html) return ''; return html.replace(/!\[([^\]]*)\]\((?!https?:\/\/)([^)]+\.(jpg|jpeg|png|gif|webp))\)/gi, (match, alt, filename) => { const webpName = filename.replace(/\.[^.]+$/, '.webp'); return `![${alt}](https://images.alaoui.be/astro-nano-images/${webpName})`; }); }
 
 async function main(){
   console.log(c.cyan('Sync Grav → Astro starting'));
@@ -68,7 +68,7 @@ async function main(){
         `cover: ${y(cover)}`,
       ];
       const file = path.join(BLOG_DIR, `${slug}.md`);
-      write(file, fm, cleanLocalImages(p.html || p.content || ''));
+      write(file, fm, convertLocalImagesToR2(p.html || p.content || ''));
       pc++;
     }
 

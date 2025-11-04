@@ -25,7 +25,6 @@ const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog', 'grav');
 const PAGES_DIR = path.join(ROOT, 'src', 'content', 'pages', 'grav');
 const PROJECTS_DIR = path.join(ROOT, 'src', 'content', 'projects', 'grav');
-const WORK_DIR = path.join(ROOT, 'src', 'content', 'work', 'grav');
 const SITE_CONFIG_TS = path.join(ROOT, 'src', 'site.config.ts');
 const HOME_FILE = path.join(PAGES_DIR, 'home.md');
 
@@ -60,8 +59,8 @@ function rewriteLocalImages(html, route){
 async function main(){
   console.log(c.cyan('Sync Grav → Astro starting'));
   if(!EXPORT_URL){ console.log(c.yellow('! GRAV_EXPORT_URL not set')); return; }
-  ensureDir(BLOG_DIR); ensureDir(PAGES_DIR); ensureDir(PROJECTS_DIR); ensureDir(WORK_DIR);
-  cleanDir(BLOG_DIR); cleanDir(PAGES_DIR); cleanDir(PROJECTS_DIR); cleanDir(WORK_DIR);
+  ensureDir(BLOG_DIR); ensureDir(PAGES_DIR); ensureDir(PROJECTS_DIR);
+  cleanDir(BLOG_DIR); cleanDir(PAGES_DIR); cleanDir(PROJECTS_DIR);
 
   try{
     const r = await fetch(EXPORT_URL, { headers:{Accept:'application/json'} });
@@ -70,7 +69,7 @@ async function main(){
     const posts = data.posts || data.articles || [];
     const pages = data.pages || [];
     const projects = data.projects || [];
-    const work = data.work || [];
+    const work = [];
     const home = data.home || null;
     const cfg   = data.config || {};
 
@@ -140,25 +139,6 @@ async function main(){
       prc++;
     }
 
-    let wc = 0; for (const item of work) {
-      const title = item.title || item.company || 'Entreprise';
-      const slug = item.slug || item.route || toSlug(title);
-      const company = item.company || item.header?.company || title;
-      const role = item.role || item.header?.role || item.header?.position || '';
-      const dateStart = item.date_start || item.header?.date_start || item.header?.from;
-      const dateEnd = item.date_end || item.header?.date_end || item.header?.to;
-      const fm = [
-        `company: ${y(company)}`,
-        `role: ${y(role)}`,
-        `dateStart: ${y(toDateMaybe(dateStart))}`,
-        `dateEnd: ${y(toDateMaybe(dateEnd))}`,
-      ];
-      const file = path.join(WORK_DIR, `${slug}.md`);
-      const body = MEDIA_BASE ? rewriteLocalImages(item.html || item.content || '', item.route || item.folder || '') : (item.html || item.content || '');
-      write(file, fm, body);
-      wc++;
-    }
-
     for (const page of pages) {
       const title = page.title || page.header?.title || 'Sans titre';
       const slug = page.slug || page.route || toSlug(title);
@@ -211,7 +191,7 @@ export const SITE_CONFIG = {
       console.log(c.yellow(`! failed to write site.config.ts: ${e?.message||e}`));
     }
 
-    console.log(c.green(`✓ Synced ${pc} posts, ${gc} pages, ${prc} projects, ${wc} work entries from Grav and generated site.config.ts`));
+    console.log(c.green(`✓ Synced ${pc} posts, ${gc} pages, ${prc} projects from Grav and generated site.config.ts`));
   }catch(e){
     console.log(c.yellow(`! Grav sync skipped: ${e?.message||e}`));
   }

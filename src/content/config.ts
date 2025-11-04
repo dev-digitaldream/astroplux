@@ -31,17 +31,6 @@ const projects = defineCollection({
   }),
 });
 
-// Work experience collection
-const work = defineCollection({
-  type: "content",
-  schema: z.object({
-    company: z.string(),
-    role: z.string(),
-    dateStart: z.coerce.date(),
-    dateEnd: z.union([z.coerce.date(), z.string()]),
-  }),
-});
-
 // Static pages (optional; for PluXML pages sync)
 const pages = defineCollection({
   type: "content",
@@ -54,4 +43,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { blog, projects, work, pages };
+export const collections = { blog, projects, pages };

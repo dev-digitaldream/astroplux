@@ -8,6 +8,19 @@ import process from 'node:process';
 import slugify from 'slugify';
 
 const EXPORT_URL = process.env.GRAV_EXPORT_URL || process.env.PLUXML_EXPORT_URL || '';
+const MEDIA_BASE = (() => {
+  const envBase = process.env.GRAV_MEDIA_BASE;
+  if (envBase) {
+    return envBase.replace(/\/$/, '');
+  }
+  if (!EXPORT_URL) return '';
+  try {
+    const url = new URL(EXPORT_URL);
+    return url.origin;
+  } catch {
+    return '';
+  }
+})();
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, 'src', 'content', 'blog', 'grav');
 const PAGES_DIR = path.join(ROOT, 'src', 'content', 'pages', 'grav');
@@ -30,13 +43,17 @@ function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return i
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
 function toDateMaybe(d){ if(!d) return ''; const t=new Date(d); return isNaN(t)?d:t.toISOString().slice(0,10); }
-function convertLocalImagesToR2(html){
+function rewriteLocalImages(html, route){
   if(!html) return '';
+  if(!MEDIA_BASE) return html;
+  const baseRoute = (route || '').replace(/^\/+/, '').replace(/\/$/, '');
   const pattern = /!\[([^\]]*)\]\((?!https?:\/\/)([^\s)]+?\.(?:jpg|jpeg|png|gif|webp))(?:\s+"([^"]*)")?\)/gi;
   return html.replace(pattern, (_match, alt, filename, title) => {
-    const webpName = filename.replace(/\.[^.]+$/, '.webp');
+    const cleaned = filename.replace(/^\.\//, '').replace(/^\/+/, '');
     const titlePart = title ? ` "${title}"` : '';
-    return `![${alt}](https://images.alaoui.be/astro-nano-images/${webpName}${titlePart})`;
+    const finalPath = baseRoute && !cleaned.startsWith(baseRoute) ? `${baseRoute}/${cleaned}` : cleaned;
+    const url = `${MEDIA_BASE}/${finalPath}`.replace(/(?<!:)\/+/g, '/');
+    return `![${alt}](${url}${titlePart})`;
   });
 }
 
@@ -76,7 +93,8 @@ async function main(){
         `cover: ${y(cover)}`,
       ];
       const file = path.join(BLOG_DIR, `${slug}.md`);
-      write(file, fm, convertLocalImagesToR2(p.html || p.content || ''));
+      const body = MEDIA_BASE ? rewriteLocalImages(p.html || p.content || '', p.route || p.folder || '') : (p.html || p.content || '');
+      write(file, fm, body);
       pc++;
     }
 
@@ -93,7 +111,8 @@ async function main(){
         `cover: ${y(cover)}`,
       ];
       const file = path.join(PAGES_DIR, `${slug}.md`);
-      write(file, fm, g.html || g.content || '');
+      const body = MEDIA_BASE ? rewriteLocalImages(g.html || g.content || '', g.route || g.folder || '') : (g.html || g.content || '');
+      write(file, fm, body);
       gc++;
     }
 
@@ -116,7 +135,8 @@ async function main(){
         `tags: ${JSON.stringify(tags)}`,
       ];
       const file = path.join(PROJECTS_DIR, `${slug}.md`);
-      write(file, fm, convertLocalImagesToR2(project.html || project.content || ''));
+      const body = MEDIA_BASE ? rewriteLocalImages(project.html || project.content || '', project.route || project.folder || '') : (project.html || project.content || '');
+      write(file, fm, body);
       prc++;
     }
 
@@ -134,7 +154,8 @@ async function main(){
         `dateEnd: ${y(toDateMaybe(dateEnd))}`,
       ];
       const file = path.join(WORK_DIR, `${slug}.md`);
-      write(file, fm, convertLocalImagesToR2(item.html || item.content || ''));
+      const body = MEDIA_BASE ? rewriteLocalImages(item.html || item.content || '', item.route || item.folder || '') : (item.html || item.content || '');
+      write(file, fm, body);
       wc++;
     }
 
@@ -149,7 +170,8 @@ async function main(){
         `metaDescription: ${y(page.header?.meta_description || description)}`,
       ];
       const file = path.join(PAGES_DIR, `${slug}.md`);
-      write(file, fm, convertLocalImagesToR2(page.html || page.content || ''));
+      const body = MEDIA_BASE ? rewriteLocalImages(page.html || page.content || '', page.route || page.folder || '') : (page.html || page.content || '');
+      write(file, fm, body);
     }
 
     if (home) {
@@ -161,7 +183,8 @@ async function main(){
         `metaTitle: ${y(home.header?.meta_title || title)}`,
         `metaDescription: ${y(home.header?.meta_description || description)}`,
       ];
-      write(HOME_FILE, fm, convertLocalImagesToR2(home.html || home.content || ''));
+      const body = MEDIA_BASE ? rewriteLocalImages(home.html || home.content || '', home.route || home.folder || '') : (home.html || home.content || '');
+      write(HOME_FILE, fm, body);
     }
 
     // Generate site config at build time so front can import it

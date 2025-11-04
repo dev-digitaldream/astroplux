@@ -3,10 +3,9 @@ import { getCollection } from "astro:content";
 
 export const GET: APIRoute = async () => {
   try {
-    const [blog, projects, work, pages] = await Promise.all([
+    const [blog, projects, pages] = await Promise.all([
       getCollection("blog").catch(() => []),
       getCollection("projects").catch(() => []),
-      getCollection("work").catch(() => []),
       getCollection("pages").catch(() => []),
     ]);
 
@@ -21,7 +20,6 @@ export const GET: APIRoute = async () => {
       content: {
         blog: blog.length,
         projects: projects.length,
-        work: work.length,
         pages: pages.length,
       },
     };

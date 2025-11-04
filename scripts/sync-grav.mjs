@@ -41,7 +41,6 @@ function y(v,f=''){ const val=(v==null||v==='')?f:v; return JSON.stringify(val);
 function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return isNaN(t)?f:t.toISOString().slice(0,10); }
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
-function toDateMaybe(d){ if(!d) return ''; const t=new Date(d); return isNaN(t)?d:t.toISOString().slice(0,10); }
 function rewriteLocalImages(html, route){
   if(!html) return '';
   if(!MEDIA_BASE) return html;
@@ -69,7 +68,6 @@ async function main(){
     const posts = data.posts || data.articles || [];
     const pages = data.pages || [];
     const projects = data.projects || [];
-    const work = [];
     const home = data.home || null;
     const cfg   = data.config || {};
 
@@ -178,8 +176,6 @@ export const SITE_CONFIG = {
   HOME_DESCRIPTION: ${y(cfg.home_description || cfg.site_description || '')},
   BLOG_TITLE: ${y(cfg.blog_title || 'Blog')},
   BLOG_DESCRIPTION: ${y(cfg.blog_description || '')},
-  WORK_TITLE: ${y(cfg.work_title || 'Work')},
-  WORK_DESCRIPTION: ${y(cfg.work_description || '')},
   PROJECTS_TITLE: ${y(cfg.projects_title || 'Projects')},
   PROJECTS_DESCRIPTION: ${y(cfg.projects_description || '')},
   SOCIALS: ${JSON.stringify(socials, null, 2)}

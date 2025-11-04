@@ -5,7 +5,6 @@ export const SITE: Site = {
   NAME: SITE_CONFIG.NAME,
   EMAIL: SITE_CONFIG.EMAIL,
   NUM_POSTS_ON_HOMEPAGE: 3,
-  NUM_WORKS_ON_HOMEPAGE: 2,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
 };
 
@@ -17,11 +16,6 @@ export const HOME: Metadata = {
 export const BLOG: Metadata = {
   TITLE: SITE_CONFIG.BLOG_TITLE,
   DESCRIPTION: SITE_CONFIG.BLOG_DESCRIPTION,
-};
-
-export const WORK: Metadata = {
-  TITLE: SITE_CONFIG.WORK_TITLE,
-  DESCRIPTION: SITE_CONFIG.WORK_DESCRIPTION,
 };
 
 export const PROJECTS: Metadata = {

@@ -11,9 +11,6 @@ export const SITE_CONFIG = {
   BLOG_TITLE: "Blog - Digital Dream", 
   BLOG_DESCRIPTION: "Articles et tutoriels sur le développement web",
   
-  WORK_TITLE: "Projets - Digital Dream",
-  WORK_DESCRIPTION: "Découvrez mes réalisations professionnelles",
-  
   PROJECTS_TITLE: "Projets - Digital Dream",
   PROJECTS_DESCRIPTION: "Portfolio de projets personnels et open-source",
   

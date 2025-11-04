@@ -2,22 +2,24 @@
 // Selects the right sync pipeline based on CMS_SOURCE env
 // CMS_SOURCE=ghost | pluxml | grav (default: pluxml)
 
-import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 
-// When running inside Astro prebuild, .env.local isn't automatically loaded.
-// dotenv/config above loads .env; extend it to support .env.local like our other scripts.
-const envLocalPath = path.resolve('.env.local');
-if (fs.existsSync(envLocalPath)) {
-  const lines = fs.readFileSync(envLocalPath, 'utf8').split(/\r?\n/);
+// Load environment variables from .env and .env.local when running in Node.
+const envFiles = ['.env', '.env.local'];
+for (const file of envFiles) {
+  const filePath = path.resolve(file);
+  if (!fs.existsSync(filePath)) continue;
+  const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
   for (const line of lines) {
     if (!line || line.trim().startsWith('#')) continue;
-    const [key, ...rest] = line.split('=');
-    const value = rest.join('=').trim();
+    const idx = line.indexOf('=');
+    if (idx === -1) continue;
+    const key = line.slice(0, idx).trim();
+    const value = line.slice(idx + 1).trim();
     if (key && !(key in process.env)) {
-      process.env[key.trim()] = value;
+      process.env[key] = value;
     }
   }
 }

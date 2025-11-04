@@ -1,14 +1,15 @@
 ---
-title: Accueil
-description: Page d'accueil Astro Nano
-metaTitle: Astro Nano - Portfolio & Blog
-metaDescription: Un portfolio et blog minimal, SEO-friendly et accessible pour développeurs
+title: "Home"
+description: "Home"
+metaTitle: "Home"
+metaDescription: "Home"
 ---
 
-# Hi, I'm Nano 👋🏻
+Bienvenue sur mon blog
 
-I am a minimal, seo friendly, accessible portfolio and blog for developers. I am an even more lightweight version of my popular theme [Astro Sphere](https://github.com/markhorn-dev/astro-sphere). I have a lighthouse scores of 100 across the board for performance, accesibility, best practices and SEO.
+Un espace minimaliste dédié aux créateurs, bidouilleurs et passionnés du vibecoding, de l’impression 3D et de l’open-source. Ici, on explore comment la technologie, le design et l’ingéniosité peuvent s’unir pour créer des outils simples, beaux et accessibles à tous.
 
-I come packed with full type safety, a sitemap, an rss feed, markdown and mdx support (use components in your markdown) through astro integrations. I am styled with tailwind and come preconfigured with light, dark and system/os theme preferences out of the box.
+Ce blog est pensé pour être rapide, lisible et éthique : 100 % statique, optimisé pour le SEO et l’accessibilité, et propulsé par Astro et Grav. Vous y trouverez des tutoriels, des projets partagés en open-source, des expérimentations en impression 3D et des réflexions sur la culture maker.
 
-Visit [Astro Nano on Github](https://github.com/markhorn-dev/astro-nano) to fork the repository, read the docs or one-click deploy on Vercel or Netlify.
+Tout est libre, documenté et améliorable — parce que la meilleure innovation se construit ensemble.
+![image](https://alaoui.be/grav/home/image.png "image")

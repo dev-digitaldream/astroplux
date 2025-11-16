@@ -1,21 +1,50 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@components/FormattedDate.astro";
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">;
 }
 
 const { entry } = Astro.props;
+
+const isBlog = entry.collection === "blog";
+const blogData = isBlog ? (entry as CollectionEntry<"blog">).data : null;
+const blogTags = blogData && Array.isArray(blogData.tags) ? blogData.tags : [];
+
+// Déterminer le texte d'aperçu à afficher sous le titre
+let preview = (entry as any).data?.excerpt || (entry as any).data?.description || "";
+
+if (!preview && (entry as any).body) {
+  const raw = String((entry as any).body);
+  const textOnly = raw.replace(/<[^>]+>/g, "");
+  const slice = textOnly.trim().slice(0, 160);
+  preview = slice + (textOnly.length > 160 ? "…" : "");
+}
 ---
 
 <a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
   <div class="flex flex-col flex-1 truncate">
+    {isBlog && blogData && (
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">
+        <FormattedDate date={blogData.date} />
+      </div>
+    )}
     <div class="font-semibold">
       {entry.data.title}
     </div>
     <div class="text-sm">
-      {entry.data.description}
+      {preview}
     </div>
+    {isBlog && blogTags.length > 0 && (
+      <div class="mt-1 text-xs text-gray-500 dark:text-gray-400 flex flex-wrap gap-1">
+        {blogTags.map((tag) => (
+          <span>
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
   </div>
   <svg 
     xmlns="http://www.w3.org/2000/svg" 

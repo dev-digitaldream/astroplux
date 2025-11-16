@@ -35,6 +35,24 @@ const projects = (await getCollection("projects"))
   <Container>
 
     <div class="space-y-16">
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            Derniers articles
+          </h5>
+          <Link href="/blog">
+            Voir tous les articles
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {blog.map(post => (
+            <li>
+              <ArrowCard entry={post} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section>
         <article class="space-y-4">
           {homeContent ? (
@@ -66,24 +84,6 @@ const projects = (await getCollection("projects"))
             </>
           )}
         </article>
-      </section>
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
-            Latest posts
-          </h5>
-          <Link href="/blog">
-            See all posts
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {blog.map(post => (
-            <li>
-              <ArrowCard entry={post} />
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section class="animate space-y-6">

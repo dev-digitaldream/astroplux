@@ -2,6 +2,13 @@
 import Container from "@components/Container.astro";
 import { SITE } from "@consts";
 import BackToTop from "@components/BackToTop.astro";
+import { getCollection } from "astro:content";
+
+const data = (await getCollection("blog"))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const recentPosts = data.slice(0, 5);
 ---
 
 <footer class="animate">
@@ -11,14 +18,28 @@ import BackToTop from "@components/BackToTop.astro";
         <BackToTop />
       </div>
     </div>
-    <div class="flex justify-between items-center">
-      <div>
-        &copy; 2024 {`|`} {SITE.NAME}
+    <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+      <div class="space-y-2">
+        <div class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          Derniers articles
+        </div>
+        <ul class="space-y-1 text-sm">
+          {recentPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.slug}`} class="hover:underline">
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="text-xs text-gray-500 dark:text-gray-400">
+          &copy; 2024 {`|`} {SITE.NAME}
+        </div>
       </div>
       <div class="flex flex-wrap gap-1 items-center">
         <button
           id="light-theme-button"
-          aria-label="Light theme"
+          aria-label="Thème clair"
           class="group size-8 flex items-center justify-center rounded-full"
         >
           <svg
@@ -46,7 +67,7 @@ import BackToTop from "@components/BackToTop.astro";
         </button>
         <button
           id="dark-theme-button"
-          aria-label="Dark theme"
+          aria-label="Thème sombre"
           class="group size-8 flex items-center justify-center rounded-full"
         >
           <svg
@@ -66,7 +87,7 @@ import BackToTop from "@components/BackToTop.astro";
         </button>
         <button
           id="system-theme-button"
-          aria-label="System theme"
+          aria-label="Thème système"
           class="group size-8 flex items-center justify-center rounded-full"
         >
           <svg

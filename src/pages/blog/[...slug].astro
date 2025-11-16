@@ -6,6 +6,7 @@ import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
 import ShareButtons from "@components/ShareButtons.astro";
+import { SITE } from "@consts";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -20,13 +21,36 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+const absoluteUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const shareText = post.data.description ?? "";
+
+const imageUrl = post.data.cover
+  ? new URL(post.data.cover, Astro.site).toString()
+  : undefined;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.metaDescription ?? post.data.description ?? "",
+  datePublished: post.data.date.toISOString(),
+  dateModified: post.data.date.toISOString(),
+  mainEntityOfPage: absoluteUrl,
+  author: {
+    "@type": "Person",
+    name: SITE.NAME,
+  },
+  image: imageUrl ? [imageUrl] : undefined,
+};
 ---
 
 <PageLayout title={post.data.metaTitle ?? post.data.title} description={post.data.metaDescription ?? post.data.description} image={post.data.cover}>
   <Container>
+    <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     <div class="animate">
       <BackToPrev href="/blog">
-        Back to blog
+        Retour au blog
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
@@ -39,23 +63,15 @@ const { Content } = await post.render();
           {readingTime(post.body)}
         </div>
       </div>
-      <div class="animate text-2xl font-semibold text-black dark:text-white">
+      <h1 class="animate text-2xl font-semibold text-black dark:text-white">
         {post.data.title}
-      </div>
+      </h1>
     </div>
-    {
-      // Absolute URL for sharing
-    }
-    {(() => {
-      const absoluteUrl = new URL(Astro.url.pathname, Astro.site).toString();
-      return (
-        <div class="animate my-6">
-          <ShareButtons url={absoluteUrl} title={post.data.title} text={post.data.description ?? ''} />
-        </div>
-      );
-    })()}
     <article class="animate">
       <Content />
     </article>
+    <div class="animate my-6">
+      <ShareButtons url={absoluteUrl} title={post.data.title} text={shareText} />
+    </div>
   </Container>
 </PageLayout>

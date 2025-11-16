@@ -26,7 +26,7 @@ const { Content } = await project.render();
   <Container>
     <div class="animate">
       <BackToPrev href="/projects">
-        Back to projects
+        Retour aux projets
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
@@ -46,7 +46,7 @@ const { Content } = await project.render();
         <nav class="animate flex gap-1">
           {project.data.demoURL && (
             <Link href={project.data.demoURL} external>
-              demo
+              démo
             </Link>
           )}
           {project.data.demoURL && project.data.repoURL && (
@@ -54,7 +54,7 @@ const { Content } = await project.render();
           )}
           {project.data.repoURL && (
             <Link href={project.data.repoURL} external>
-              repo
+              code source
             </Link>
           )}
         </nav>

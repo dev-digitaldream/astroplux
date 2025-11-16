@@ -6,19 +6,19 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: Date) {
-  return Intl.DateTimeFormat("en-US", {
-    month: "short",
+  return Intl.DateTimeFormat("fr-FR", {
     day: "2-digit",
+    month: "short",
     year: "numeric"
   }).format(date);
 }
 
 export function readingTime(html?: string | null) {
-  if (!html) return "0 min read";
+  if (!html) return "0 min de lecture";
   const textOnly = html.replace(/<[^>]+>/g, "");
   const wordCount = textOnly.trim().split(/\s+/).filter(Boolean).length;
   const readingTimeMinutes = ((wordCount / 200) + 1).toFixed();
-  return `${readingTimeMinutes} min read`;
+  return `${readingTimeMinutes} min de lecture`;
 }
 
 export function dateRange(startDate: Date, endDate?: Date | string): string {

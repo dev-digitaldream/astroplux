@@ -88,6 +88,10 @@ async function main(){
     const cfg   = data.config || {};
 
     let pc=0; for(const p of posts){
+      const route = p.route || '';
+      // Ignorer la page racine du blog (/blog) qui ne doit pas être un article
+      if (route === '/blog') continue;
+
       const title = p.title || p.header?.title || 'Sans titre';
       const slug = p.slug || p.route || toSlug(title);
       const description = p.excerpt || p.header?.summary || p.header?.description || title;

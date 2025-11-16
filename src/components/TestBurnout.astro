@@ -1,0 +1,198 @@
+---
+const questions = [
+  // Épuisement émotionnel
+  { id: 1, text: "Je me sens émotionnellement vidé par mon travail.", category: "emotional" },
+  { id: 2, text: "Je me sens épuisé à la fin d'une journée de travail.", category: "emotional" },
+  { id: 3, text: "Je me sens fatigué le matin en pensant à une nouvelle journée.", category: "emotional" },
+  { id: 4, text: "Travailler toute la journée représente une tension.", category: "emotional" },
+  { id: 5, text: "Je me sens usé par mon travail.", category: "emotional" },
+  { id: 6, text: "Je me sens frustré par mon travail.", category: "emotional" },
+  { id: 7, text: "J'ai l'impression de travailler trop dur.", category: "emotional" },
+  { id: 8, text: "Le contact direct avec les gens me stresse trop.", category: "emotional" },
+  { id: 9, text: "Je me sens au bout du rouleau.", category: "emotional" },
+
+  // Dépersonnalisation
+  { id: 10, text: "Je traite parfois des collègues ou clients comme des objets.", category: "depersonal" },
+  { id: 11, text: "Je suis devenu plus insensible aux autres.", category: "depersonal" },
+  { id: 12, text: "Je crains que ce travail ne m'endurcisse émotionnellement.", category: "depersonal" },
+  { id: 13, text: "Je ne me soucie pas vraiment de ce qui arrive à certains collègues.", category: "depersonal" },
+  { id: 14, text: "Je sens que les autres me rendent responsable de leurs problèmes.", category: "depersonal" },
+
+  // Accomplissement personnel
+  { id: 15, text: "Je comprends facilement ce que ressentent les autres.", category: "personal" },
+  { id: 16, text: "Je m'occupe efficacement des problèmes des autres.", category: "personal" },
+  { id: 17, text: "J'ai une influence positive sur les autres.", category: "personal" },
+  { id: 18, text: "Je me sens plein d'énergie.", category: "personal" },
+  { id: 19, text: "Je crée facilement une atmosphère détendue.", category: "personal" },
+  { id: 20, text: "Je me sens stimulé après avoir travaillé avec les autres.", category: "personal" },
+  { id: 21, text: "J'accomplis beaucoup de choses utiles dans mon travail.", category: "personal" },
+  { id: 22, text: "Je gère calmement les problèmes émotionnels.", category: "personal" },
+];
+
+const options = [
+  { value: 0, label: "Jamais" },
+  { value: 1, label: "Quelques fois par an" },
+  { value: 2, label: "Une fois par mois" },
+  { value: 3, label: "Quelques fois par mois" },
+  { value: 4, label: "Une fois par semaine" },
+  { value: 5, label: "Quelques fois par semaine" },
+  { value: 6, label: "Tous les jours" },
+];
+---
+---
+
+<div class="test-wrapper">
+  <h2>Test d'évaluation du burnout</h2>
+  <p class="disclaimer">
+    Ce test est anonyme et vos réponses restent sur votre appareil. Aucun enregistrement n'est effectué.
+  </p>
+
+  <div id="test-container"></div>
+</div>
+
+<style>
+  .test-wrapper {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    background: white;
+    font-family: system-ui, sans-serif;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+  }
+
+  .disclaimer {
+    font-size: 0.9rem;
+    padding: 10px;
+    background: #f7f7f7;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+
+  .question {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #efefef;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 16px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .results {
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+</style>
+
+<script is:inline>
+  const questions = JSON.parse('{JSON.stringify(questions)}');
+  const options = JSON.parse('{JSON.stringify(options)}');
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("test-container");
+    if (!container) return;
+
+    let index = 0;
+    const answers = Array(questions.length).fill(null);
+
+    function render() {
+      container.innerHTML = "";
+      if (index < questions.length) {
+        const q = questions[index];
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "question";
+        wrapper.innerHTML =
+          "Question " + (index + 1) + " / " + questions.length + "<br><br>" + q.text;
+
+        const opts = document.createElement("div");
+        opts.className = "options-grid";
+
+        options.forEach((opt) => {
+          const label = document.createElement("label");
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "q";
+          input.value = String(opt.value);
+          if (answers[index] === opt.value) input.checked = true;
+          input.addEventListener("change", () => {
+            answers[index] = opt.value;
+            nextBtn.disabled = false;
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" " + opt.label));
+          opts.appendChild(label);
+        });
+
+        wrapper.appendChild(opts);
+        container.appendChild(wrapper);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = index === questions.length - 1 ? "Voir les résultats" : "Suivant";
+        nextBtn.disabled = answers[index] === null;
+
+        nextBtn.onclick = () => {
+          index++;
+          render();
+        };
+
+        container.appendChild(nextBtn);
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      const result = {
+        emotional: 0,
+        depersonal: 0,
+        personal: 0,
+      };
+
+      questions.forEach((q, i) => {
+        result[q.category] += answers[i] ?? 0;
+      });
+
+      container.innerHTML = `
+        <div class="results">
+          <h3>Vos résultats</h3><br>
+          Épuisement émotionnel : ${result.emotional}<br>
+          Dépersonnalisation : ${result.depersonal}<br>
+          Accomplissement personnel : ${result.personal}<br><br>
+          Ce test est une aide à l'autoévaluation. En cas de doute, parlez-en à un professionnel.
+        </div>
+      `;
+    }
+
+    render();
+  });
+</script>

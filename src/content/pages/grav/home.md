@@ -11,5 +11,5 @@ Un espace minimaliste dédié aux créateurs, bidouilleurs et passionnés du vib
 
 Ce blog est pensé pour être rapide, lisible et éthique : 100 % statique, optimisé pour le SEO et l’accessibilité, et propulsé par Astro et Grav. Vous y trouverez des tutoriels, des projets partagés en open-source, des expérimentations en impression 3D et des réflexions sur la culture maker.
 
-Tout est libre, documenté et améliorable — parce que la meilleure innovation se construit ensemble.
+Tout est libre, documenté et améliorable, parce que la meilleure innovation se construit ensemble.
 ![image](https://alaoui.be/grav/home/image.png "image")

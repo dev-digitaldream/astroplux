@@ -38,7 +38,23 @@ const c = {
 function ensureDir(d){ fs.mkdirSync(d,{recursive:true}); }
 function cleanDir(d){ if(fs.existsSync(d)) for(const f of fs.readdirSync(d)) if(f.endsWith('.md')) fs.unlinkSync(path.join(d,f)); }
 function y(v,f=''){ const val=(v==null||v==='')?f:v; return JSON.stringify(val); }
-function toISO(d,f='2025-01-01'){ if(!d) return f; const t=new Date(d); return isNaN(t)?f:t.toISOString().slice(0,10); }
+function toISO(d,f='2025-01-01'){
+  if(!d) return f;
+
+  // Grav peut fournir des dates au format européen "dd-MM-yyyy HH:mm"
+  if (typeof d === 'string') {
+    const trimmed = d.trim();
+    const m = trimmed.match(/^(\d{2})-(\d{2})-(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
+    if (m) {
+      const [, dd, MM, yyyy, hh = '00', mm = '00'] = m;
+      const t = new Date(Number(yyyy), Number(MM) - 1, Number(dd), Number(hh), Number(mm));
+      if (!isNaN(t)) return t.toISOString().slice(0,10);
+    }
+  }
+
+  const t=new Date(d);
+  return isNaN(t)?f:t.toISOString().slice(0,10);
+}
 function toSlug(s,f='untitled'){ return slugify((s||f), { lower:true, strict:true }); }
 function write(file, fm, body){ const out = ['---', ...fm, '---', '', body||'', ''].join('\n'); fs.writeFileSync(file,out,{encoding:'utf8'}); }
 function rewriteLocalImages(html, route){

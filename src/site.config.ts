@@ -1,22 +1,25 @@
-// Configuration par défaut pour le build
-// Copiez ce fichier en site.config.ts et adaptez-le à votre projet
-
+// Auto-generated from Grav export. Do not commit.
 export const SITE_CONFIG = {
-  NAME: "Digital Dream",
+  NAME: "The Blog",
   EMAIL: "dev@digitaldream.work",
-  
-  HOME_TITLE: "Accueil - Digital Dream",
-  HOME_DESCRIPTION: "Site web construit avec Astro et Grav CMS",
-  
-  BLOG_TITLE: "Blog - Digital Dream", 
-  BLOG_DESCRIPTION: "Articles et tutoriels sur le développement web",
-  
-  PROJECTS_TITLE: "Projets - Digital Dream",
-  PROJECTS_DESCRIPTION: "Portfolio de projets personnels et open-source",
-  
+  HOME_TITLE: "Accueil",
+  HOME_DESCRIPTION: "Bienvenue sur mon Blog",
+  BLOG_TITLE: "Blog",
+  BLOG_DESCRIPTION: "Actualités et articles",
+  PROJECTS_TITLE: "Projets",
+  PROJECTS_DESCRIPTION: "Projets et études de cas",
   SOCIALS: [
-    { NAME: "github", HREF: "https://github.com/dev-digitaldream" },
-    { NAME: "twitter-x", HREF: "https://twitter.com/digitaldream_io" },
-    { NAME: "linkedin", HREF: "https://linkedin.com/in/mohammed-alaoui-1379a617/" },
-  ]
+  {
+    "NAME": "github",
+    "HREF": "https://github.com/dev-digitaldream"
+  },
+  {
+    "NAME": "linkedin",
+    "HREF": "https://linkedin.com/in/dev-digitaldream"
+  },
+  {
+    "NAME": "twitter-x",
+    "HREF": "https://twitter.com/digitaldream_io"
+  }
+]
 };

@@ -1,44 +1,4 @@
 ---
-const questions = [
-  // Épuisement émotionnel
-  { id: 1, text: "Je me sens émotionnellement vidé par mon travail.", category: "emotional" },
-  { id: 2, text: "Je me sens épuisé à la fin d'une journée de travail.", category: "emotional" },
-  { id: 3, text: "Je me sens fatigué le matin en pensant à une nouvelle journée.", category: "emotional" },
-  { id: 4, text: "Travailler toute la journée représente une tension.", category: "emotional" },
-  { id: 5, text: "Je me sens usé par mon travail.", category: "emotional" },
-  { id: 6, text: "Je me sens frustré par mon travail.", category: "emotional" },
-  { id: 7, text: "J'ai l'impression de travailler trop dur.", category: "emotional" },
-  { id: 8, text: "Le contact direct avec les gens me stresse trop.", category: "emotional" },
-  { id: 9, text: "Je me sens au bout du rouleau.", category: "emotional" },
-
-  // Dépersonnalisation
-  { id: 10, text: "Je traite parfois des collègues ou clients comme des objets.", category: "depersonal" },
-  { id: 11, text: "Je suis devenu plus insensible aux autres.", category: "depersonal" },
-  { id: 12, text: "Je crains que ce travail ne m'endurcisse émotionnellement.", category: "depersonal" },
-  { id: 13, text: "Je ne me soucie pas vraiment de ce qui arrive à certains collègues.", category: "depersonal" },
-  { id: 14, text: "Je sens que les autres me rendent responsable de leurs problèmes.", category: "depersonal" },
-
-  // Accomplissement personnel
-  { id: 15, text: "Je comprends facilement ce que ressentent les autres.", category: "personal" },
-  { id: 16, text: "Je m'occupe efficacement des problèmes des autres.", category: "personal" },
-  { id: 17, text: "J'ai une influence positive sur les autres.", category: "personal" },
-  { id: 18, text: "Je me sens plein d'énergie.", category: "personal" },
-  { id: 19, text: "Je crée facilement une atmosphère détendue.", category: "personal" },
-  { id: 20, text: "Je me sens stimulé après avoir travaillé avec les autres.", category: "personal" },
-  { id: 21, text: "J'accomplis beaucoup de choses utiles dans mon travail.", category: "personal" },
-  { id: 22, text: "Je gère calmement les problèmes émotionnels.", category: "personal" },
-];
-
-const options = [
-  { value: 0, label: "Jamais" },
-  { value: 1, label: "Quelques fois par an" },
-  { value: 2, label: "Une fois par mois" },
-  { value: 3, label: "Quelques fois par mois" },
-  { value: 4, label: "Une fois par semaine" },
-  { value: 5, label: "Quelques fois par semaine" },
-  { value: 6, label: "Tous les jours" },
-];
----
 ---
 
 <div class="test-wrapper">
@@ -82,10 +42,13 @@ const options = [
   }
 
   .options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    display: block;
     margin-top: 10px;
+  }
+
+  .option-line {
+    display: block;
+    margin-bottom: 8px;
   }
 
   button {
@@ -96,6 +59,7 @@ const options = [
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    align-self: flex-end;
   }
 
   button:disabled {
@@ -113,13 +77,59 @@ const options = [
 </style>
 
 <script is:inline>
-  const questions = JSON.parse('{JSON.stringify(questions)}');
-  const options = JSON.parse('{JSON.stringify(options)}');
+  const questions = [
+    // Épuisement émotionnel
+    { id: 1, text: "Je me sens émotionnellement vidé par mon travail.", category: "emotional" },
+    { id: 2, text: "Je me sens épuisé à la fin d'une journée de travail.", category: "emotional" },
+    { id: 3, text: "Je me sens fatigué le matin en pensant à une nouvelle journée.", category: "emotional" },
+    { id: 4, text: "Travailler toute la journée représente une tension.", category: "emotional" },
+    { id: 5, text: "Je me sens usé par mon travail.", category: "emotional" },
+    { id: 6, text: "Je me sens frustré par mon travail.", category: "emotional" },
+    { id: 7, text: "J'ai l'impression de travailler trop dur.", category: "emotional" },
+    { id: 8, text: "Le contact direct avec les gens me stresse trop.", category: "emotional" },
+    { id: 9, text: "Je me sens au bout du rouleau.", category: "emotional" },
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const container = document.getElementById("test-container");
-    if (!container) return;
+    // Dépersonnalisation
+    { id: 10, text: "Je traite parfois des collègues ou clients comme des objets.", category: "depersonal" },
+    { id: 11, text: "Je suis devenu plus insensible aux autres.", category: "depersonal" },
+    { id: 12, text: "Je crains que ce travail ne m'endurcisse émotionnellement.", category: "depersonal" },
+    { id: 13, text: "Je ne me soucie pas vraiment de ce qui arrive à certains collègues.", category: "depersonal" },
+    { id: 14, text: "Je sens que les autres me rendent responsable de leurs problèmes.", category: "depersonal" },
 
+    // Accomplissement personnel
+    { id: 15, text: "Je comprends facilement ce que ressentent les autres.", category: "personal" },
+    { id: 16, text: "Je m'occupe efficacement des problèmes des autres.", category: "personal" },
+    { id: 17, text: "J'ai une influence positive sur les autres.", category: "personal" },
+    { id: 18, text: "Je me sens plein d'énergie.", category: "personal" },
+    { id: 19, text: "Je crée facilement une atmosphère détendue.", category: "personal" },
+    { id: 20, text: "Je me sens stimulé après avoir travaillé avec les autres.", category: "personal" },
+    { id: 21, text: "J'accomplis beaucoup de choses utiles dans mon travail.", category: "personal" },
+    { id: 22, text: "Je gère calmement les problèmes émotionnels.", category: "personal" },
+  ];
+
+  const options = [
+    { value: 0, label: "Jamais" },
+    { value: 1, label: "Quelques fois par an" },
+    { value: 2, label: "Une fois par mois" },
+    { value: 3, label: "Quelques fois par mois" },
+    { value: 4, label: "Une fois par semaine" },
+    { value: 5, label: "Quelques fois par semaine" },
+    { value: 6, label: "Tous les jours" },
+  ];
+
+  const container = document.getElementById("test-container");
+  if (!container) {
+    // Si le script est exécuté avant que le DOM soit prêt, re-tenter dès que possible
+    window.addEventListener("load", () => {
+      const lateContainer = document.getElementById("test-container");
+      if (!lateContainer) return;
+      initTest(lateContainer);
+    });
+  } else {
+    initTest(container);
+  }
+
+  function initTest(container) {
     let index = 0;
     const answers = Array(questions.length).fill(null);
 
@@ -136,8 +146,13 @@ const options = [
         const opts = document.createElement("div");
         opts.className = "options-grid";
 
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = index === questions.length - 1 ? "Voir les résultats" : "Suivant";
+        nextBtn.disabled = answers[index] === null;
+
         options.forEach((opt) => {
           const label = document.createElement("label");
+          label.className = "option-line";
           const input = document.createElement("input");
           input.type = "radio";
           input.name = "q";
@@ -155,10 +170,6 @@ const options = [
 
         wrapper.appendChild(opts);
         container.appendChild(wrapper);
-
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = index === questions.length - 1 ? "Voir les résultats" : "Suivant";
-        nextBtn.disabled = answers[index] === null;
 
         nextBtn.onclick = () => {
           index++;
@@ -194,5 +205,5 @@ const options = [
     }
 
     render();
-  });
+  }
 </script>

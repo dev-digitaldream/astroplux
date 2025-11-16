@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test d'évaluation du burnout</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .test-wrapper {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      background: white;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+    .disclaimer {
+      font-size: 0.9rem;
+      padding: 10px;
+      background: #f7f7f7;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .question {
+      margin-bottom: 20px;
+      font-size: 1rem;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #efefef;
+    }
+    .options-grid {
+      display: block;
+      margin-top: 10px;
+    }
+    .option-line {
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .results {
+      background: #f7f7f7;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-wrapper">
+    <h1>Test d'évaluation du burnout</h1>
+    <p class="disclaimer">
+      Ce test est anonyme et vos réponses restent sur votre appareil. Aucun enregistrement n'est effectué.
+      Il s'agit d'un outil d'autoévaluation, il ne remplace pas un avis médical.
+    </p>
+
+    <div id="test-container"></div>
+  </div>
+
+  <script>
+    const questions = [
+      // Épuisement émotionnel
+      { id: 1, text: "Je me sens émotionnellement vidé par mon travail.", category: "emotional" },
+      { id: 2, text: "Je me sens épuisé à la fin d'une journée de travail.", category: "emotional" },
+      { id: 3, text: "Je me sens fatigué le matin en pensant à une nouvelle journée.", category: "emotional" },
+      { id: 4, text: "Travailler toute la journée représente une tension.", category: "emotional" },
+      { id: 5, text: "Je me sens usé par mon travail.", category: "emotional" },
+      { id: 6, text: "Je me sens frustré par mon travail.", category: "emotional" },
+      { id: 7, text: "J'ai l'impression de travailler trop dur.", category: "emotional" },
+      { id: 8, text: "Le contact direct avec les gens me stresse trop.", category: "emotional" },
+      { id: 9, text: "Je me sens au bout du rouleau.", category: "emotional" },
+
+      // Dépersonnalisation
+      { id: 10, text: "Je traite parfois des collègues ou clients comme des objets.", category: "depersonal" },
+      { id: 11, text: "Je suis devenu plus insensible aux autres.", category: "depersonal" },
+      { id: 12, text: "Je crains que ce travail ne m'endurcisse émotionnellement.", category: "depersonal" },
+      { id: 13, text: "Je ne me soucie pas vraiment de ce qui arrive à certains collègues.", category: "depersonal" },
+      { id: 14, text: "Je sens que les autres me rendent responsable de leurs problèmes.", category: "depersonal" },
+
+      // Accomplissement personnel
+      { id: 15, text: "Je comprends facilement ce que ressentent les autres.", category: "personal" },
+      { id: 16, text: "Je m'occupe efficacement des problèmes des autres.", category: "personal" },
+      { id: 17, text: "J'ai une influence positive sur les autres.", category: "personal" },
+      { id: 18, text: "Je me sens plein d'énergie.", category: "personal" },
+      { id: 19, text: "Je crée facilement une atmosphère détendue.", category: "personal" },
+      { id: 20, text: "Je me sens stimulé après avoir travaillé avec les autres.", category: "personal" },
+      { id: 21, text: "J'accomplis beaucoup de choses utiles dans mon travail.", category: "personal" },
+      { id: 22, text: "Je gère calmement les problèmes émotionnels.", category: "personal" },
+    ];
+
+    const options = [
+      { value: 0, label: "Jamais" },
+      { value: 1, label: "Quelques fois par an" },
+      { value: 2, label: "Une fois par mois" },
+      { value: 3, label: "Quelques fois par mois" },
+      { value: 4, label: "Une fois par semaine" },
+      { value: 5, label: "Quelques fois par semaine" },
+      { value: 6, label: "Tous les jours" },
+    ];
+
+    const container = document.getElementById("test-container");
+    if (!container) throw new Error("test-container introuvable");
+
+    let index = 0;
+    const answers = Array(questions.length).fill(null);
+
+    function render() {
+      container.innerHTML = "";
+      if (index < questions.length) {
+        const q = questions[index];
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "question";
+        wrapper.innerHTML =
+          "Question " + (index + 1) + " / " + questions.length + "<br><br>" + q.text;
+
+        const opts = document.createElement("div");
+        opts.className = "options-grid";
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = index === questions.length - 1 ? "Voir les résultats" : "Suivant";
+        nextBtn.disabled = answers[index] === null;
+
+        options.forEach((opt) => {
+          const label = document.createElement("label");
+          label.className = "option-line";
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "q";
+          input.value = String(opt.value);
+          if (answers[index] === opt.value) input.checked = true;
+          input.addEventListener("change", () => {
+            answers[index] = opt.value;
+            nextBtn.disabled = false;
+          });
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" " + opt.label));
+          opts.appendChild(label);
+        });
+
+        wrapper.appendChild(opts);
+        container.appendChild(wrapper);
+
+        nextBtn.onclick = () => {
+          index++;
+          render();
+        };
+
+        container.appendChild(nextBtn);
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      const result = {
+        emotional: 0,
+        depersonal: 0,
+        personal: 0,
+      };
+
+      questions.forEach((q, i) => {
+        result[q.category] += answers[i] ?? 0;
+      });
+
+      function niveau(score, seuilBas, seuilHaut) {
+        if (score < seuilBas) return "faible";
+        if (score <= seuilHaut) return "modéré";
+        return "élevé";
+      }
+
+      const emotionalLevel = niveau(result.emotional, 17, 26);
+      const depersonalLevel = niveau(result.depersonal, 5, 10);
+      const personalLevel = niveau(result.personal, 33, 39);
+
+      const conseils = [];
+
+      if (emotionalLevel === "élevé") {
+        conseils.push("Votre niveau d'épuisement émotionnel semble élevé. Ralentir, poser des limites et en parler à un professionnel peut vous aider à prévenir un burnout plus profond.");
+      } else if (emotionalLevel === "modéré") {
+        conseils.push("Votre épuisement émotionnel est modéré. Surveillez vos signaux de fatigue, accordez-vous du repos et identifiez ce qui vous épuise le plus au quotidien.");
+      } else {
+        conseils.push("Votre score d'épuisement émotionnel est plutôt faible. Continuez à préserver vos temps de récupération et vos ressources personnelles.");
+      }
+
+      if (depersonalLevel === "élevé") {
+        conseils.push("La dépersonnalisation est élevée : vous pouvez avoir l'impression de vous éloigner des autres ou de fonctionner en pilote automatique. Parler de cette impression à quelqu'un de confiance ou à un spécialiste peut être utile.");
+      } else if (depersonalLevel === "modéré") {
+        conseils.push("Votre dépersonnalisation est modérée. Rester attentif à votre relation aux autres et à votre empathie peut aider à éviter une montée du cynisme ou du détachement.");
+      } else {
+        conseils.push("Votre score de dépersonnalisation est faible, ce qui suggère que vous gardez un lien plutôt préservé avec les autres.");
+      }
+
+      if (personalLevel === "faible") {
+        conseils.push("Votre sentiment d'accomplissement personnel semble diminué. Si vous avez l'impression de ne plus être efficace ou utile, en parler avec un professionnel ou votre entourage peut aider à retrouver du sens.");
+      } else if (personalLevel === "modéré") {
+        conseils.push("Votre accomplissement personnel est modéré. Identifier ce qui vous donne encore de l'énergie et du sens dans votre travail peut être un bon point de départ.");
+      } else {
+        conseils.push("Votre sentiment d'accomplissement personnel est plutôt préservé, ce qui est un point protecteur important.");
+      }
+
+      container.innerHTML = `
+        <div class="results">
+          <h2>Vos résultats</h2><br>
+          <strong>Épuisement émotionnel :</strong> ${result.emotional} (niveau ${emotionalLevel})<br>
+          <strong>Dépersonnalisation :</strong> ${result.depersonal} (niveau ${depersonalLevel})<br>
+          <strong>Accomplissement personnel :</strong> ${result.personal} (niveau ${personalLevel})<br><br>
+          ${conseils.map(c => `<p>${c}</p>`).join("\n")} 
+          <p><em>Ce test est une aide à l'autoévaluation. En cas de doute, de souffrance ou de difficultés persistantes, parlez-en à un professionnel de santé.</em></p>
+        </div>
+      `;
+    }
+
+    render();
+  </script>
+</body>
+</html>

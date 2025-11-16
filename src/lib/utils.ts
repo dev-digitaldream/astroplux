@@ -13,9 +13,10 @@ export function formatDate(date: Date) {
   }).format(date);
 }
 
-export function readingTime(html: string) {
+export function readingTime(html?: string | null) {
+  if (!html) return "0 min read";
   const textOnly = html.replace(/<[^>]+>/g, "");
-  const wordCount = textOnly.split(/\s+/).length;
+  const wordCount = textOnly.trim().split(/\s+/).filter(Boolean).length;
   const readingTimeMinutes = ((wordCount / 200) + 1).toFixed();
   return `${readingTimeMinutes} min read`;
 }
